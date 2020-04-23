@@ -2,6 +2,16 @@
 
 ## 公众号授权域名代理
 
+## 启动
+
+``` bash
+# install dependencies
+yarn
+
+# serve with hot reload
+yarn run dev
+```
+
 ## 极速使用
 1. 假设将网页授权回调域名设置为`www.xxx.com`
 2. 编辑`router/index.js`，将 `oauthUrlForCode` 变量`appId`的值修改为自己的`微信公众号AppId`
