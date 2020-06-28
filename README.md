@@ -2,6 +2,9 @@
 
 ## 公众号授权域名代理
 
+## 界面
+![./shot/1.png](./shot/1.png)
+
 ## 启动
 
 ``` bash
@@ -17,7 +20,7 @@ yarn debug
 2. 部署项目
 3. 跳转项目首页，配置路由信息
 4. 在微信内或使用微信web开发者工具访问`http://www.xxx.com/code/v1?auk=zxk175`
-5. 页面将跳转到`auk=zxk175`的url：`redirectUrlMap[auk]?auk=zxk175&code=xxx&state=xxx`
+5. 页面将跳转到`auk=zxk175`的url：?auk=zxk175&code=xxx&state=xxx`
 
 ## 攻略指南
 1. `?auk=zxk175`中的`auk`、`zxk175`以及此时的`授权url`（即接收`授权code`的url，最终跳转的url）都是可以自定义的；
