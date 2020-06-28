@@ -9,13 +9,13 @@
 yarn
 
 # serve with hot reload
-yarn run dev
+yarn debug
 ```
 
 ## 极速使用
 1. 假设将网页授权回调域名设置为`www.xxx.com`
-2. 编辑`router/index.js`，将 `oauthUrlForCode` 变量`appId`的值修改为自己的`微信公众号AppId`
-3. 部署项目
+2. 部署项目
+3. 跳转项目首页，配置路由信息
 4. 在微信内或使用微信web开发者工具访问`http://www.xxx.com/code/v1?auk=zxk175`
 5. 页面将跳转到`auk=zxk175`的url：`redirectUrlMap[auk]?auk=zxk175&code=xxx&state=xxx`
 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="//lib.baomitu.com/element-ui/2.13.2/theme-chalk/index.css">
+    <style type="text/css">
+        [v-cloak] {
+            display: none;
+        }
+
+        .popover-tip {
+            color: #f00;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app" v-cloak>
+    <el-card :body-style="{padding: '20px 10px'}">
+        <h4>使用教程：<a href="https://github.com/zxk175/wx-oauth-proxy" target="_blank">https://github.com/zxk175/wx-oauth-proxy</a></h4>
+
+        <h2>{{title}}列表 （<span v-text="tableLen"></span>条）</h2>
+
+        <div style="margin: 10px 0;">
+            <el-button-group>
+                <el-button type="primary" size="small" @click="showDialog()">新增</el-button>
+                <el-button type="primary" size="small" @click="listData()">刷新</el-button>
+            </el-button-group>
+        </div>
+
+        <el-table :data="tableData" size="small" border>
+            <el-table-column prop="id" label="id" width="140" align="center"></el-table-column>
+            <el-table-column prop="auk" label="auk" width="140" align="center"></el-table-column>
+            <el-table-column prop="appId" label="appId" min-width="140" align="center"></el-table-column>
+            <el-table-column prop="url" label="url" min-width="420" align="center"></el-table-column>
+            <el-table-column prop="remark" label="备注" min-width="140" align="center"></el-table-column>
+            <el-table-column label="操作" width="220" align="center" fixed="right">
+                <template slot-scope="scope">
+                    <el-popover placement="top" trigger="click" :ref="scope.row.id + 'del'">
+                        <p>确定<span class="popover-tip" v-text="scope.row.id"></span>进行<span class="popover-tip">删除</span>操作?
+                        </p>
+                        <div style="text-align: right; margin: 0">
+                            <el-button size="info" type="text" @click="hidePopover(scope.row.id, 'del')">取消</el-button>
+                            <el-button type="primary" size="mini" @click="removeData(scope.row)">确定</el-button>
+                        </div>
+                    </el-popover>
+
+                    <el-button-group>
+                        <el-button type="primary" size="small" @click.native="copyUrl(scope.row.auk)">复制Url</el-button>
+                        <el-button type="warning" size="small" @click.native="openDialog(scope.row.id)">修改</el-button>
+                        <el-button type="danger" size="small" v-popover="scope.row.id + 'del'">删除</el-button>
+                    </el-button-group>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-dialog title="添加{{title}}"
+                   :visible.sync="dialogVisible"
+                   :close-on-click-modal="false"
+                   @close="closeDialog">
+            <el-form :model="formData">
+                <el-form-item prop="auk" label="auk">
+                    <el-input v-model="formData.auk"></el-input>
+                </el-form-item>
+
+                <el-form-item prop="appId" label="appId">
+                    <el-input v-model="formData.appId"></el-input>
+                </el-form-item>
+
+                <el-form-item prop="url" label="url（要跳转的url）">
+                    <el-input v-model="formData.url"></el-input>
+                </el-form-item>
+
+                <el-form-item prop="备注" label="备注">
+                    <el-input v-model="formData.remark"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="closeDialog">取消</el-button>
+                <el-button type="primary" @click="saveData">确定</el-button>
+            </span>
+        </el-dialog>
+    </el-card>
+</div>
+
+<script type="text/javascript" src="//lib.baomitu.com/vue/2.6.11/vue.min.js"></script>
+<script type="text/javascript" src="//lib.baomitu.com/axios/0.19.0/axios.min.js"></script>
+<script type="text/javascript" src="//lib.baomitu.com/element-ui/2.13.2/index.js"></script>
+<script type="text/javascript" src="//lib.baomitu.com/vue-router/3.1.3/vue-router.min.js"></script>
+<script type="text/javascript" src="/public/js/request.js"></script>
+<script type="text/javascript">
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        popoverVisible: false,
+        dialogVisible: false,
+        tableData: [],
+        tableLen: 0,
+        formData: {
+          id: 0,
+          auk: '',
+          appId: '',
+          url: '',
+          remark: ''
+        }
+      };
+    },
+    created() {
+      this.listData();
+    },
+    methods: {
+      openDialog(id) {
+        let that = this;
+        get('/code/info/v1?id=' + id, function(res) {
+          let data = res.data;
+          if (data.success) {
+            that.showDialog(data.data);
+          }
+        });
+      },
+
+      listData() {
+        let that = this;
+        const params = that.getParams();
+
+        post('/code/list/v1', params, function(res) {
+          let data = res.data;
+          if (data.success) {
+            that.tableData = data.data;
+            that.tableLen = data.data.length;
+          } else {
+            that.tableData = [];
+          }
+        });
+      },
+
+      getParams() {
+        return {};
+      },
+
+      hidePopover(id, type) {
+        this.$refs[id + type].doClose();
+      },
+
+      closeDialog() {
+        this.dialogVisible = false;
+      },
+
+      showDialog(row) {
+        if (row) {
+          this.formData = row;
+        } else {
+          Object.assign(this.$data.formData, this.$options.data().formData);
+        }
+
+        this.dialogVisible = true;
+      },
+
+      saveData() {
+        let that = this;
+        let url = that.formData.id === 0 ? '/code/add/v1' : '/code/modify/v1';
+
+        post(url, that.formData, function(res) {
+          let data = res.data;
+          if (data.success) {
+            that.listData();
+            that.closeDialog();
+          }
+        });
+      },
+
+      removeData(row) {
+        let that = this;
+        post('/code/remove/v1', [ row.id ], function(res) {
+          let data = res.data;
+          if (data.success) {
+            that.hidePopover(row.id, 'del');
+            that.listData();
+          }
+        });
+      },
+
+      copyUrl(auk) {
+        let input = document.createElement('input');
+        input.style.position = 'absolute';
+        input.style.left = '-9999px';
+        input.readOnly = true;
+        input.value = window.location.origin + `/code/v1?auk=${auk}`;
+        document.body.appendChild(input);
+        input.select();
+        const result = document.execCommand('Copy');
+        if (result) {
+          success('复制成功');
+        }
+        document.body.removeChild(input);
+      }
+    }
+  });
+</script>
+</body>
+</html>

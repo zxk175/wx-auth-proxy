@@ -1,27 +1,35 @@
 {
   "name": "wx-oauth-proxy",
   "version": "1.0.0",
-  "author": "zxk175",
+  "description": "wx-oauth-proxy",
   "private": true,
-  "scripts": {
-    "start": "node bin/www",
-    "dev": "./node_modules/.bin/nodemon bin/www",
-    "prod": "rm -rf logs && pm2 delete pm2.json && pm2 start pm2.json"
-  },
-  "engines": {
-    "node": ">= 4"
+  "egg": {
+    "declarations": true
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "ejs": "^3.0.2",
-    "koa": "^2.11.0",
-    "koa-views": "^6.2.1",
-    "koa-static": "^5.0.0",
-    "koa-logger": "^3.2.0",
-    "koa-router": "^7.4.0"
+    "egg": "^2.15.1",
+    "egg-scripts": "^2.11.0",
+    "egg-view-nunjucks": "^2.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
+    "autod": "^3.0.1",
+    "autod-egg": "^1.1.0",
+    "egg-bin": "^4.11.0"
   },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=egg-server-wx-oauth-proxy",
+    "stop": "egg-scripts stop --title=egg-server-wx-oauth-proxy",
+    "dev": "egg-bin dev",
+    "debug": "egg-bin debug",
+    "autod": "autod"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "zxk175",
   "license": "MIT"
 }
