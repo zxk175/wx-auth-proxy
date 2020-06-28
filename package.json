@@ -24,7 +24,8 @@
     "stop": "egg-scripts stop --title=egg-server-wx-oauth-proxy",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
-    "autod": "autod"
+    "autod": "autod",
+    "pm2": "pm2 start npm --name eggjs -- run dev"
   },
   "repository": {
     "type": "git",
