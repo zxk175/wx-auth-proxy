@@ -1,4 +1,4 @@
-# wx-oauth-proxy
+# wx-auth-proxy
 
 ## 公众号授权域名代理
 
